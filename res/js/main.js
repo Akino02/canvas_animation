@@ -94,8 +94,7 @@ function drawCanvas() {
         );
         if (distCircleToCircle < 100) {
           ctx.beginPath();
-          //ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`; //barva kruhu s kruhem
-          ctx.strokeStyle = "aqua";
+          ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`; //barva kruhu s kruhem
           ctx.moveTo(circlesposs[y].x, circlesposs[y].y);
           ctx.lineTo(circlesposs[i].x, circlesposs[i].y);
           ctx.stroke();
