@@ -6,14 +6,14 @@ let canvaswidth = screen.width;
 let canvasheight = screen.height;
 
 canvas.width = canvaswidth;
-canvas.height = (canvasheight-200);
+canvas.height = canvasheight - 200;
 
 setInterval(() => {
   //každých 10s se restartuje velikost canvasu
   canvaswidth = screen.width;
   canvasheight = screen.height;
   canvas.width = canvaswidth;
-  canvas.height = canvasheight-200;
+  canvas.height = canvasheight - 200;
   //console.log(canvas.width);
   //console.log(canvas.height);
 }, 10000);
@@ -47,7 +47,7 @@ let speedXY = [];
 function mousepos() {
   canvas.addEventListener("mousemove", function (event) {
     mouseX = event.clientX;
-    mouseY = event.clientY;
+    mouseY = event.clientY; //-84 aby myš byla správně napozicována
     mousecoor.innerHTML = `${mouseX},${mouseY}`;
   });
 }
@@ -72,9 +72,7 @@ function drawCanvas() {
         radiusarr[i].x = Math.abs(radiusarr[i].x);
       }
       ctx.beginPath();
-
       ctx.fillStyle = `rgb(${savecolor[i].x},${savecolor[i].y},${savecolor[i].z})`; //barva kruhů
-
       ctx.arc(
         circlesposs[i].x,
         circlesposs[i].y,
@@ -94,7 +92,7 @@ function drawCanvas() {
         );
         if (distCircleToCircle < 100) {
           ctx.beginPath();
-          ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`; //barva kruhu s kruhem
+          //ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`;                                                //barva kruhu s kruhem
           ctx.moveTo(circlesposs[y].x, circlesposs[y].y);
           ctx.lineTo(circlesposs[i].x, circlesposs[i].y);
           ctx.stroke();
@@ -104,8 +102,7 @@ function drawCanvas() {
         //let opacitystick = (1-(distToCircle/100)); //čím blíže tím bude plnější
         let opacitystick = distToCircle / 100; //čím blíže tím bude prázdnější                               //barva kruhu s myší
         ctx.beginPath();
-        //ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`;
-        ctx.strokeStyle = "aqua";
+        ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`;
         ctx.moveTo(mouseX, mouseY);
         ctx.lineTo(circlesposs[i].x, circlesposs[i].y);
         ctx.stroke();
