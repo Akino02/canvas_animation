@@ -2,8 +2,21 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const mousecoor = document.getElementById("mousecoor");
 
-canvas.width = 1920;
-canvas.height = 900;
+let canvaswidth = screen.width;
+let canvasheight = screen.height;
+
+canvas.width = canvaswidth;
+canvas.height = (canvasheight-200);
+
+setInterval(() => {
+  //každých 10s se restartuje velikost canvasu
+  canvaswidth = screen.width;
+  canvasheight = screen.height;
+  canvas.width = canvaswidth;
+  canvas.height = canvasheight-200;
+  //console.log(canvas.width);
+  //console.log(canvas.height);
+}, 10000);
 
 let mouseX = canvas.width / 2;
 let mouseY = canvas.height / 2;
@@ -53,39 +66,51 @@ function drawCanvas() {
   /*Speed*/ speedXY.push({ x: speedX, y: speedY });
 
   radiusarr.push({ x: radius });
-  for (let i = 0; i < 50; i++) {
-    if (radiusarr[i].x < 0) {
-      radiusarr[i].x = Math.abs(radiusarr[i].x);
-    }
-    ctx.beginPath();
-    ctx.fillStyle = `rgb(${savecolor[i].x},${savecolor[i].y},${savecolor[i].z})`;
-    ctx.arc(circlesposs[i].x, circlesposs[i].y, radiusarr[i].x, 0, Math.PI * 2);
-    ctx.fill();
+  if (circlesposs.length >= 100) {
+    for (let i = 0; i < 100; i++) {
+      if (radiusarr[i].x < 0) {
+        radiusarr[i].x = Math.abs(radiusarr[i].x);
+      }
+      ctx.beginPath();
 
-    distToCircle = Math.sqrt(
-      (mouseX - circlesposs[i].x) ** 2 + (mouseY - circlesposs[i].y) ** 2
-    );
-    for (let y = 0; y < 50; y++) {
-      distCircleToCircle = Math.sqrt(
-        (circlesposs[y].x - circlesposs[i].x) ** 2 +
-          (circlesposs[y].y - circlesposs[i].y) ** 2
+      ctx.fillStyle = `rgb(${savecolor[i].x},${savecolor[i].y},${savecolor[i].z})`; //barva kruhů
+
+      ctx.arc(
+        circlesposs[i].x,
+        circlesposs[i].y,
+        radiusarr[i].x,
+        0,
+        Math.PI * 2
       );
-      if (distCircleToCircle < 100) {
+      ctx.fill();
+
+      distToCircle = Math.sqrt(
+        (mouseX - circlesposs[i].x) ** 2 + (mouseY - circlesposs[i].y) ** 2
+      );
+      for (let y = 0; y < 100; y++) {
+        distCircleToCircle = Math.sqrt(
+          (circlesposs[y].x - circlesposs[i].x) ** 2 +
+            (circlesposs[y].y - circlesposs[i].y) ** 2
+        );
+        if (distCircleToCircle < 100) {
+          ctx.beginPath();
+          //ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`; //barva kruhu s kruhem
+          ctx.strokeStyle = "aqua";
+          ctx.moveTo(circlesposs[y].x, circlesposs[y].y);
+          ctx.lineTo(circlesposs[i].x, circlesposs[i].y);
+          ctx.stroke();
+        }
+      }
+      if (distToCircle < 100) {
+        //let opacitystick = (1-(distToCircle/100)); //čím blíže tím bude plnější
+        let opacitystick = distToCircle / 100; //čím blíže tím bude prázdnější                               //barva kruhu s myší
         ctx.beginPath();
         //ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`;
-        ctx.moveTo(circlesposs[y].x, circlesposs[y].y);
+        ctx.strokeStyle = "aqua";
+        ctx.moveTo(mouseX, mouseY);
         ctx.lineTo(circlesposs[i].x, circlesposs[i].y);
         ctx.stroke();
       }
-    }
-    if (distToCircle < 100) {
-      //let opacitystick = (1-(distToCircle/100)); //čím blíže tím bude plnější
-      let opacitystick = distToCircle / 100; //čím blíže tím bude prázdnější
-      ctx.beginPath();
-      ctx.strokeStyle = `rgba(256,0,0,${opacitystick})`;
-      ctx.moveTo(mouseX, mouseY);
-      ctx.lineTo(circlesposs[i].x, circlesposs[i].y);
-      ctx.stroke();
     }
   }
 }
@@ -115,7 +140,7 @@ function fall() {
       if (circlesposs[i].x > 0) {
         circlesposs[i].x += speedXY[i].x;
         speedXY[i].x = speedXY[i].x * -1;
-        console.log("ahoj right");
+        //console.log("ahoj right");
       }
     } else if (
       circlesposs[i].y + radiusarr[i].x < canvas.height ||
@@ -125,11 +150,11 @@ function fall() {
       if (circlesposs[i].y < 0) {
         circlesposs[i].y -= speedXY[i].y;
         speedXY[i].y = speedXY[i].y * -1;
-        console.log("Ahoj top");
+        //console.log("Ahoj top");
       } else if (circlesposs[i].x < 0) {
         circlesposs[i].x += speedXY[i].x;
         speedXY[i].x = speedXY[i].x * -1;
-        console.log("ahoj left");
+        //console.log("ahoj left");
       }
     }
   }
